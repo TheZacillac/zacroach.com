@@ -1,1 +1,135 @@
-<h>Hey there! - The site is coming soon!</h>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Coming Soon — Zac Roach</title>
+  <meta name="description" content="Personal site of Zac Roach — coming soon." />
+  <meta property="og:title" content="Zac Roach — Coming Soon" />
+  <meta property="og:description" content="Personal site — coming soon." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'><rect width='100%25' height='100%25' fill='black'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif' font-size='64'>Coming Soon</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect rx='6' width='32' height='32' fill='black'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='18' fill='white' font-family='system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif'>ZR</text></svg>">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #111315;
+      --muted: #525B61;
+      --border: #E6E8EA;
+      --accent: #0EA5E9; /* tweak me */
+      color-scheme: light dark;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { 
+        --bg: #0b0c0d; 
+        --fg: #EEF2F6; 
+        --muted: #A1A8AD; 
+        --border: #1c1f23; 
+        --accent: #38BDF8; 
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      display: grid;
+      place-items: center;
+      min-height: 100svh;
+      padding: 24px;
+      line-height: 1.5;
+    }
+    .wrap {
+      width: min(720px, 100%);
+      display: grid;
+      gap: 20px;
+      padding: clamp(20px, 3vw, 32px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: color-mix(in oklab, var(--bg), transparent 20%);
+      backdrop-filter: blur(6px);
+    }
+    .brand {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .logo {
+      width: 36px; height: 36px; border-radius: 10px; 
+      display: inline-grid; place-items: center; 
+      border: 1px solid var(--border);
+      color: var(--fg);
+    }
+    .logo svg { width: 18px; height: 18px; }
+    h1 { 
+      font-size: clamp(28px, 4vw, 40px); 
+      font-weight: 700; 
+      margin: 0; 
+      letter-spacing: -0.02em;
+    }
+    p { margin: 0; color: var(--muted); font-size: clamp(15px, 2.2vw, 16px); }
+    .meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border); }
+    .accent { color: var(--accent); text-decoration: none; }
+    .accent:focus, .accent:hover { text-decoration: underline; }
+    .footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 4px; }
+    .social { display: flex; gap: 10px; }
+    .iconlink { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); color: var(--fg); text-decoration: none; }
+    .button { 
+      appearance: none; border: 1px solid var(--border); background: transparent; color: var(--fg);
+      padding: 10px 14px; border-radius: 10px; cursor: pointer; font: inherit; 
+    }
+    .button:hover { border-color: color-mix(in oklab, var(--fg), transparent 80%); }
+    @media (prefers-reduced-motion: no-preference) {
+      .wrap { 
+        transform: translateY(8px); 
+        opacity: .001; 
+        animation: in .6s cubic-bezier(.2,.8,.2,1) .05s forwards; 
+      }
+      @keyframes in { to { transform: none; opacity: 1; } }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap" role="main" aria-labelledby="title">
+    <header class="brand">
+      <div class="logo" aria-hidden="true" title="ZR">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 7h9l-9 10h9" />
+        </svg>
+      </div>
+      <div>
+        <h1 id="title">Coming soon.</h1>
+        <div class="meta">
+          <p>Personal site of <strong>Zac Roach</strong></p>
+          <span class="dot" aria-hidden="true"></span>
+          <p><span id="year"></span></p>
+        </div>
+      </div>
+    </header>
+
+    <p>Heads down building.
+    </p>
+  </main>
+
+  <script>
+    // Set the year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Optional: add a simple calendar placeholder via ICS file for "Site Launch"
+    document.getElementById('ics').addEventListener('click', () => {
+      const dt = new Date();
+      const start = new Date(dt.getFullYear(), dt.getMonth()+1, 1, 9, 0, 0); // 1st of next month 09:00
+      const pad = n => String(n).padStart(2, '0');
+      const toICS = d => `${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
+      const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//ZacRoach//ComingSoon//EN\nBEGIN:VEVENT\nUID:${crypto.randomUUID()}\nDTSTAMP:${toICS(new Date())}\nDTSTART:${toICS(start)}\nDURATION:PT30M\nSUMMARY:Zac's site launch (placeholder)\nEND:VEVENT\nEND:VCALENDAR`;
+      const blob = new Blob([ics], { type: 'text/calendar' });
+      const url = URL.createObjectURL(blob);
+      const a = Object.assign(document.createElement('a'), { href: url, download: 'site-launch.ics' });
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    });
+  </script>
+</body>
+</html>
