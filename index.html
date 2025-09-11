@@ -1,190 +1,489 @@
-import React, { useEffect } from "react";
-import { motion } from "framer-motion";
-
-// Chroma‑inspired, system‑theme aware, fully responsive landing
-// Title: plainly "Coming Soon"
-
-export default function ComingSoon() {
-  useEffect(() => {
-    // Page title
-    document.title = "Coming Soon";
-    // Set theme-color to match system theme background for better PWA/mobile chrome
-    const meta = document.querySelector('meta[name="theme-color"]') || document.createElement("meta");
-    meta.setAttribute("name", "theme-color");
-    meta.setAttribute("content", getComputedStyle(document.documentElement).getPropertyValue("--surface").trim() || "#0b0b0f");
-    if (!meta.parentElement) document.head.appendChild(meta);
-
-    // Update on theme changes
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const handler = () => {
-      meta.setAttribute("content", getComputedStyle(document.documentElement).getPropertyValue("--surface").trim());
-    };
-    mq.addEventListener?.("change", handler);
-    return () => mq.removeEventListener?.("change", handler);
-  }, []);
-
-  return (
-    <main className="relative min-h-screen overflow-hidden antialiased [--pad:clamp(16px,4vw,48px)] flex items-center justify-center">
-      {/* CSS Variables + base styles */}
-      <style>{`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon - Zac Roach</title>
+    <meta name="description" content="Something amazing is coming soon. Stay tuned for updates.">
+    <meta name="theme-color" content="#0a0a0f">
+    
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <style>
+        /* CSS Custom Properties for theming */
         :root {
-          --surface: #0b0b0f; /* dark default to honor system dark */
-          --text: #e6e6f0;
-          --muted: #a3a3b2;
-          --ring: 255 255 255 / 0.08;
-          --accent-1: 186 230 253;  /* sky‑200 */
-          --accent-2: 196 181 253;  /* violet‑200 */
-          --accent-3: 134 239 172;  /* green‑300 */
-          --grid: 255 255 255 / 0.05;
-          --shadow: 0 10px 30px rgb(0 0 0 / 0.35), 0 2px 10px rgb(0 0 0 / 0.2);
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #111118;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
+
         @media (prefers-color-scheme: light) {
-          :root {
-            --surface: #ffffff;
-            --text: #0b0b12;
-            --muted: #5b5b6a;
-            --ring: 0 0 0 / 0.06;
-            --accent-1: 59 130 246;   /* blue‑500 */
-            --accent-2: 168 85 247;   /* purple‑500 */
-            --accent-3: 16 185 129;   /* emerald‑500 */
-            --grid: 0 0 0 / 0.05;
-            --shadow: 0 8px 24px rgb(0 0 0 / 0.1), 0 2px 8px rgb(0 0 0 / 0.06);
-          }
+            :root {
+                --bg-primary: #ffffff;
+                --bg-secondary: #f8fafc;
+                --text-primary: #0f172a;
+                --text-secondary: #475569;
+                --text-muted: #94a3b8;
+                --accent: #3b82f6;
+                --accent-hover: #2563eb;
+                --border: rgba(0, 0, 0, 0.1);
+                --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
         }
-        body { background: var(--surface); color: var(--text); }
-      `}</style>
 
-      {/* Background layers: subtle radial gradient + animated blobs + grid */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        {/* radial glow */}
-        <div className="absolute inset-0" style={{
-          background:
-            "radial-gradient(1200px 600px at 50% -10%, rgb(var(--accent-2)) / 0.15 0%, transparent 60%)," +
-            "radial-gradient(800px 400px at 10% 110%, rgb(var(--accent-3)) / 0.12 0%, transparent 60%)," +
-            "radial-gradient(900px 500px at 100% 10%, rgb(var(--accent-1)) / 0.12 0%, transparent 60%)"
-        }} />
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        {/* Grid overlay */}
-        <svg className="absolute inset-0 mix-blend-overlay opacity-60" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
-              <path d="M 64 0 L 0 0 0 64" fill="none" stroke={`rgba(${""}var(--grid))`} strokeWidth="1" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-        </svg>
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
 
-        {/* noise texture */}
-        <div className="absolute inset-0 opacity-[0.06]" style={{
-          backgroundImage: `url('data:image/svg+xml;utf8,${encodeURIComponent(`
-            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"128\" height=\"128\"> 
-              <filter id=\"n\"> 
-                <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.8\" numOctaves=\"4\" stitchTiles=\"stitch\"/> 
-              </filter> 
-              <rect width=\"100%\" height=\"100%\" filter=\"url(%23n)\" opacity=\"0.5\"/> 
-            </svg>`)}')`
-        }} />
-      </div>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-      {/* Floating accent blob */}
-      <motion.div
-        aria-hidden
-        className="absolute -z-0 h-[40vmax] w-[40vmax] rounded-full blur-3xl"
-        style={{
-          background:
-            "conic-gradient(from 180deg at 50% 50%, rgba(186,230,253,0.12), rgba(196,181,253,0.18), rgba(134,239,172,0.14), rgba(186,230,253,0.12))"
-        }}
-        initial={{ x: "-20%", y: "-10%", opacity: 0.6 }}
-        animate={{ x: ["-20%", "5%", "-10%"], y: ["-10%", "5%", "-8%"], opacity: [0.6, 0.8, 0.7] }}
-        transition={{ duration: 24, repeat: Infinity, ease: "easeInOut" }}
-      />
+        /* Background effects */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
 
-      {/* Content */}
-      <section className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center gap-6 px-[--pad] text-center">
-        <Badge>COMING SOON</Badge>
-        <h1 className="text-balance font-semibold leading-none tracking-tight [font-size:clamp(2.5rem,8vw,6rem)]">
-          <span className="bg-gradient-to-r from-[rgb(var(--accent-1))] via-[rgb(var(--accent-2))] to-[rgb(var(--accent-3))] bg-clip-text text-transparent">
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #667eea, transparent);
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #764ba2, transparent);
+            top: 60%;
+            right: 15%;
+            animation-delay: -10s;
+        }
+
+        .orb-3 {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, #f093fb, transparent);
+            bottom: 20%;
+            left: 20%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) translateX(0px);
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            50% {
+                transform: translateY(-10px) translateX(-5px);
+            }
+            75% {
+                transform: translateY(-30px) translateX(15px);
+            }
+        }
+
+        /* Grid pattern */
+        .grid-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.5;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 800px;
+            width: 100%;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Main heading */
+        .main-heading {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        /* Subtitle */
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        /* CTA Card */
+        .cta-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .cta-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .cta-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .notify-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notify-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .notify-btn:active {
+            transform: translateY(0);
+        }
+
+        .notify-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .notify-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Footer */
+        .footer {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            animation: fadeInUp 0.8s ease-out 0.8s both;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .footer-year {
+            font-weight: 500;
+        }
+
+        .footer-note {
+            opacity: 0.8;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .cta-card {
+                padding: 1.5rem;
+            }
+
+            .cta-content {
+                gap: 1rem;
+            }
+
+            .orb-1 {
+                width: 200px;
+                height: 200px;
+            }
+
+            .orb-2 {
+                width: 150px;
+                height: 150px;
+            }
+
+            .orb-3 {
+                width: 100px;
+                height: 100px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .badge {
+                font-size: 0.75rem;
+                padding: 0.375rem 0.75rem;
+            }
+
+            .subtitle {
+                font-size: 1.125rem;
+            }
+
+            .cta-card {
+                padding: 1.25rem;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus styles */
+        .notify-btn:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background effects -->
+    <div class="background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+        <div class="grid-pattern"></div>
+    </div>
+
+    <!-- Main content -->
+    <div class="container">
+        <!-- Badge -->
+        <div class="badge">
             Coming Soon
-          </span>
+        </div>
+
+        <!-- Main heading -->
+        <h1 class="main-heading">
+            Something Amazing is Coming
         </h1>
-        <p className="max-w-prose text-pretty text-base md:text-lg" style={{ color: "var(--muted)" }}>
-          Something crisp and colorful is on the way. This page respects your system theme and scales smoothly to any device.
+
+        <!-- Subtitle -->
+        <p class="subtitle">
+            We're crafting something special that will be worth the wait. 
+            Stay tuned for updates and be the first to experience what's coming.
         </p>
 
-        {/* Decorative callout card */}
-        <motion.div
-          className="mt-2 w-full max-w-xl rounded-2xl border backdrop-blur-sm"
-          style={{
-            borderColor: `rgba(${""}var(--ring))`,
-            boxShadow: "var(--shadow)",
-            background:
-              "linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.02))"
-          }}
-          initial={{ y: 12, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-        >
-          <div className="grid grid-cols-1 items-center gap-4 p-5 sm:grid-cols-3">
-            <div className="col-span-2 text-left">
-              <div className="text-sm" style={{ color: "var(--muted)" }}>
-                We’ll launch when it’s ready — not when it’s rushed. 
-              </div>
+        <!-- CTA Card -->
+        <div class="cta-card">
+            <div class="cta-content">
+                <p class="cta-text">
+                    Want to be notified when we launch? We'll send you a heads up.
+                </p>
+                <button class="notify-btn" onclick="handleNotify()">
+                    Notify Me
+                </button>
             </div>
-            <div className="flex items-center justify-center">
-              <a
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                className="group inline-flex items-center justify-center rounded-xl px-4 py-2 font-medium ring-1 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-                style={{
-                  color: "var(--text)",
-                  boxShadow: "var(--shadow)",
-                  background:
-                    "linear-gradient(90deg, rgb(var(--accent-1)) / 0.15, rgb(var(--accent-2)) / 0.18, rgb(var(--accent-3)) / 0.18)",
-                  borderColor: `rgba(${""}var(--ring))`
-                }}
-                aria-label="No action — just vibes"
-              >
-                Notify me (soon)
-              </a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-year">
+                    © <span id="current-year"></span> Zac Roach
+                </div>
+                <div class="footer-note">
+                    Building something great, one line of code at a time.
+                </div>
             </div>
-          </div>
-        </motion.div>
+        </footer>
+    </div>
 
-        <Footer />
-      </section>
-    </main>
-  );
-}
+    <script>
+        // Set current year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
 
-function Badge({ children }: { children: React.ReactNode }) {
-  return (
-    <span
-      className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium ring-1"
-      style={{ borderColor: `rgba(${""}var(--ring))`, color: "var(--muted)", background: "rgb(0 0 0 / 0.06)" }}
-      role="status"
-      aria-live="polite"
-    >
-      <span className="relative h-2 w-2">
-        <span className="absolute inset-0 animate-ping rounded-full" style={{ background: "rgb(134 239 172 / 0.7)" }} />
-        <span className="absolute inset-0 rounded-full" style={{ background: "rgb(134 239 172 / 1)" }} />
-      </span>
-      {children}
-    </span>
-  );
-}
+        // Handle notify button click
+        function handleNotify() {
+            const btn = document.querySelector('.notify-btn');
+            const originalText = btn.textContent;
+            
+            btn.textContent = 'Thanks! We\'ll be in touch.';
+            btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            btn.disabled = true;
+            
+            // Reset after 3 seconds
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = 'var(--gradient)';
+                btn.disabled = false;
+            }, 3000);
+        }
 
-function Footer() {
-  const year = new Date().getFullYear();
-  return (
-    <footer className="mt-16 flex w-full max-w-3xl flex-col items-center gap-3 pb-10 text-center text-sm" style={{ color: "var(--muted)" }}>
-      <div className="flex items-center gap-3">
-        <span>© {year}</span>
-        <span className="opacity-50">•</span>
-        <span>All vibes, no hype (yet).</span>
-      </div>
-      <div className="opacity-60">
-        Auto‑themed via <code className="rounded bg-black/10 px-1 py-0.5">prefers-color-scheme</code>. Responsive by design.
-      </div>
-    </footer>
-  );
-}
+        // Update theme color based on system preference
+        function updateThemeColor() {
+            const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+            const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            metaThemeColor.content = isDark ? '#0a0a0f' : '#ffffff';
+        }
+
+        // Listen for theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateThemeColor);
+        updateThemeColor();
+
+        // Add some interactive effects
+        document.addEventListener('mousemove', (e) => {
+            const orbs = document.querySelectorAll('.gradient-orb');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            orbs.forEach((orb, index) => {
+                const speed = (index + 1) * 0.5;
+                const xOffset = (x - 0.5) * speed * 20;
+                const yOffset = (y - 0.5) * speed * 20;
+                
+                orb.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            });
+        });
+
+        // Smooth scroll for any anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
