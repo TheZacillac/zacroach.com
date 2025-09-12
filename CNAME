@@ -1,1 +1,2 @@
 www.zacroach.com
+    - umami_postgres_data:/var/lib/postgresql/data
