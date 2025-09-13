@@ -8,7 +8,7 @@
     <meta name="theme-color" content="#0a0a0f">
     
     <!-- Preload critical resources -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://umami.zacroach.com">
     <!-- Content Security Policy (allows Umami + inline JS on this page) -->
     <meta http-equiv="Content-Security-Policy" content="
         script-src 'self' https://umami.zacroach.com 'unsafe-inline';
@@ -24,19 +24,6 @@
     </script>
 
     <style>
-        /* CSS Custom Properties for theming */
-        :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #111118;
-            --text-primary: #ffffff;
-            --text-secondary: #a1a1aa;
-            --text-muted: #71717a;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --border: rgba(255, 255, 255, 0.1);
-            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
         /* CSS Custom Properties for theming */
         :root {
             --bg-primary: #0a0a0f;
@@ -391,6 +378,24 @@
             }
         }
 
+        /* Skip link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--accent);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+        
+        .skip-link:focus {
+            top: 6px;
+        }
+
         /* Focus styles */
         .notify-btn:focus {
             outline: 2px solid var(--accent);
@@ -399,6 +404,9 @@
     </style>
 </head>
 <body>
+    <!-- Skip link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
     <!-- Background effects -->
     <div class="background">
         <div class="gradient-orb orb-1"></div>
@@ -408,7 +416,7 @@
     </div>
 
     <!-- Main content -->
-    <div class="container">
+    <div class="container" id="main-content">
         <!-- Badge -->
         <div class="badge">
             Coming Soon
@@ -431,7 +439,7 @@
                 <p class="cta-text">
                     Want to be notified when I launch? I'll send you a heads up!
                 </p>
-                <button class="notify-btn" onclick="handleNotify()">
+                <button class="notify-btn" onclick="handleNotify()" aria-label="Get notified when the site launches">
                     Notify Me
                 </button>
             </div>
@@ -451,12 +459,17 @@
     </div>
 
     <script>
-        // Set current year
-        document.getElementById('current-year').textContent = new Date().getFullYear();
+        // Set current year with error handling
+        const yearElement = document.getElementById('current-year');
+        if (yearElement) {
+            yearElement.textContent = new Date().getFullYear();
+        }
 
         // Handle notify button click
         function handleNotify() {
             const btn = document.querySelector('.notify-btn');
+            if (!btn) return;
+            
             const originalText = btn.textContent;
             
             btn.textContent = 'Thanks! We\'ll be in touch.';
@@ -474,6 +487,8 @@
         // Update theme color based on system preference
         function updateThemeColor() {
             const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+            if (!metaThemeColor) return;
+            
             const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             metaThemeColor.content = isDark ? '#0a0a0f' : '#ffffff';
         }
@@ -482,19 +497,26 @@
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateThemeColor);
         updateThemeColor();
 
-        // Add some interactive effects
+        // Add some interactive effects with throttling for better performance
+        let mouseMoveTimeout;
         document.addEventListener('mousemove', (e) => {
-            const orbs = document.querySelectorAll('.gradient-orb');
-            const x = e.clientX / window.innerWidth;
-            const y = e.clientY / window.innerHeight;
+            if (mouseMoveTimeout) return;
             
-            orbs.forEach((orb, index) => {
-                const speed = (index + 1) * 0.5;
-                const xOffset = (x - 0.5) * speed * 20;
-                const yOffset = (y - 0.5) * speed * 20;
+            mouseMoveTimeout = setTimeout(() => {
+                const orbs = document.querySelectorAll('.gradient-orb');
+                const x = e.clientX / window.innerWidth;
+                const y = e.clientY / window.innerHeight;
                 
-                orb.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-            });
+                orbs.forEach((orb, index) => {
+                    const speed = (index + 1) * 0.5;
+                    const xOffset = (x - 0.5) * speed * 20;
+                    const yOffset = (y - 0.5) * speed * 20;
+                    
+                    orb.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+                });
+                
+                mouseMoveTimeout = null;
+            }, 16); // ~60fps throttling
         });
     </script>
 </body>
