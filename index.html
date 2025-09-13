@@ -430,6 +430,9 @@
         async src="https://analytics.zacroach.com/script.js"
         data-website-id="5a47864d-2969-4e13-b0ca-1aca32a09b21"
         data-domains="zacroach.com,www.zacroach.com"
+        script-src 'self' https://umami.zacroach.com;
+        connect-src 'self' https://umami.zacroach.com;
+
         
         // Set current year
         document.getElementById('current-year').textContent = new Date().getFullYear();
