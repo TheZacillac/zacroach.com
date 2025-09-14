@@ -245,67 +245,6 @@
             animation: fadeInUp 0.8s ease-out 0.4s both;
         }
 
-        /* CTA Card */
-        .cta-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
-            padding: 2rem;
-            margin-bottom: 3rem;
-            backdrop-filter: blur(10px);
-            box-shadow: var(--shadow);
-            animation: fadeInUp 0.8s ease-out 0.6s both;
-        }
-
-        .cta-content {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            align-items: center;
-        }
-
-        .cta-text {
-            color: var(--text-secondary);
-            font-size: 1rem;
-        }
-
-        .notify-btn {
-            background: var(--gradient);
-            color: white;
-            border: none;
-            border-radius: 0.75rem;
-            padding: 0.75rem 2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .notify-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .notify-btn:active {
-            transform: translateY(0);
-        }
-
-        .notify-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .notify-btn:hover::before {
-            left: 100%;
-        }
 
         /* Footer */
         .footer {
@@ -347,13 +286,6 @@
                 padding: 1.5rem;
             }
 
-            .cta-card {
-                padding: 1.5rem;
-            }
-
-            .cta-content {
-                gap: 1rem;
-            }
 
             .orb-1 {
                 width: 200px;
@@ -385,9 +317,6 @@
                 font-size: 1.125rem;
             }
 
-            .cta-card {
-                padding: 1.25rem;
-            }
         }
 
         /* Accessibility */
@@ -421,11 +350,6 @@
             visibility: visible;
         }
 
-        /* Focus styles */
-        .notify-btn:focus {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-        }
     </style>
 </head>
 <body>
@@ -458,17 +382,6 @@
             Stay tuned for updates and be the first to experience what's coming.  
         </p>
 
-        <!-- CTA Card -->
-        <div class="cta-card">
-            <div class="cta-content">
-                <p class="cta-text">
-                    Want to be notified when I launch? I'll send you a heads up!
-                </p>
-                <button class="notify-btn" onclick="handleNotify()" aria-label="Get notified when the site launches">
-                    Notify Me
-                </button>
-            </div>
-        </div>
 
         <!-- Footer -->
         <footer class="footer">
@@ -490,24 +403,6 @@
             yearElement.textContent = new Date().getFullYear();
         }
 
-        // Handle notify button click
-        function handleNotify() {
-            const btn = document.querySelector('.notify-btn');
-            if (!btn) return;
-            
-            const originalText = btn.textContent;
-            
-            btn.textContent = 'Thanks! We\'ll be in touch.';
-            btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-            btn.disabled = true;
-            
-            // Reset after 3 seconds
-            setTimeout(() => {
-                btn.textContent = originalText;
-                btn.style.background = 'var(--gradient)';
-                btn.disabled = false;
-            }, 3000);
-        }
 
         // Update theme color based on system preference
         function updateThemeColor() {
