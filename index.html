@@ -60,6 +60,25 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            border: none;
+            outline: none;
+        }
+
+        /* Remove any default browser styling that could cause blue lines */
+        html:focus, body:focus {
+            outline: none !important;
+        }
+
+        *:focus {
+            outline: none !important;
+        }
+
+        /* Ensure no unwanted borders on any elements */
+        div, section, article, header, footer, main {
+            border: none;
+        }
+
         html {
             font-size: 16px;
             scroll-behavior: smooth;
@@ -75,6 +94,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            border: none;
+            outline: none;
         }
 
         /* Background effects */
